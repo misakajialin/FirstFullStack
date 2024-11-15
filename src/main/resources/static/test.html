@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学生管理系统</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f7f7f7;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+    header {
+      background: #3498db;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+    }
+    .card {
+      background: #fff;
+      margin-bottom: 20px;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .card h2 {
+      margin-top: 0;
+      color: #3498db;
+    }
+    form label {
+      display: block;
+      margin: 10px 0 5px;
+      color: #555;
+    }
+    form input[type="text"],
+    form input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    form input[type="submit"] {
+      background: #3498db;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    form input[type="submit"]:hover {
+      background: #2980b9;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #3498db;
+      color: white;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    footer {
+      background: #333;
+      color: #fff;
+      text-align: center;
+      padding: 10px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>学生管理系统</h1>
+  </div>
+</header>
+
+<div class="container">
+  <div class="card">
+    <h2>添加学生信息</h2>
+    <form id="addStudentForm">
+      <label for="studentId">学号:</label>
+      <input type="text" id="studentId" name="studentId">
+
+      <label for="studentName">姓名:</label>
+      <input type="text" id="studentName" name="studentName">
+
+      <label for="studentAge">年龄:</label>
+      <input type="number" id="studentAge" name="studentAge">
+
+      <input type="button" value="添加学生" onclick="addStudent()">
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>修改学生信息</h2>
+    <form id="editStudentForm">
+      <label for="editStudentId">学号:</label>
+      <input type="text" id="editStudentId" name="editStudentId">
+
+      <label for="editStudentName">姓名:</label>
+      <input type="text" id="editStudentName" name="editStudentName">
+
+      <label for="editStudentAge">年龄:</label>
+      <input type="number" id="editStudentAge" name="editStudentAge">
+
+      <input type="button" value="修改学生" onclick="editStudent()">
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>删除学生信息</h2>
+    <form id="deleteStudentForm">
+      <label for="deleteStudentId">学号:</label>
+      <input type="text" id="deleteStudentId" name="deleteStudentId">
+
+      <input type="button" value="删除学生" onclick="deleteStudent()">
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>查询学生信息</h2>
+    <form id="queryStudentForm">
+      <label for="queryStudentId">学号:</label>
+      <input type="text" id="queryStudentId" name="queryStudentId">
+
+      <input type="button" value="查询学生" onclick="queryStudent()">
+    </form>
+    <table id="studentsTable" class="table">
+      <thead>
+      <tr>
+        <th>学号</th>
+        <th>姓名</th>
+        <th>年龄</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- 学生数据将在这里动态插入 -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  <p>学生管理系统 &copy; 2024</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function addStudent() {
+    var data = {
+      id: document.getElementById('studentId').value,
+      name: document.getElementById('studentName').value,
+      age: document.getElementById('studentAge').value
+    };
+    fetch('/api/add_student', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Success:', data);
+              // 清空表单
+              document.getElementById('addStudentForm').reset();
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+  }
+
+  function editStudent() {
+    var data = {
+      id: document.getElementById('editStudentId').value,
+      name: document.getElementById('editStudentName').value,
+      age: document.getElementById('editStudentAge').value
+    };
+    fetch('/api/edit_student', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Success:', data);
+              // 清空表单
+              document.getElementById('editStudentForm').reset();
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+  }
+
+  function deleteStudent() {
+    var studentId = document.getElementById('deleteStudentId').value;
+    fetch('/api/delete_student', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: studentId }),
+    })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Success:', data);
+              // 清空表单
+              document.getElementById('deleteStudentForm').reset();
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+  }
+
+  function queryStudent() {
+    var studentId = document.getElementById('queryStudentId').value;
+    fetch('/api/query_student', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: studentId }),
+    })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+            .then(data => {
+              console.log('Success:', data);
+              // 确保每次都清空表格
+              var table = document.getElementById('studentsTable').getElementsByTagName('tbody')[0];
+              table.innerHTML = ''; // 清空表格
+
+              // 检查返回的数据是否有效
+              if (data && data.id && data.id.length > 0) {
+                var len = data.id.length;
+                for (let i = 0; i < len; i++) {
+                  var row = table.insertRow(i);
+                  var cell1 = row.insertCell(0);
+                  var cell2 = row.insertCell(1);
+                  var cell3 = row.insertCell(2);
+                  cell1.innerHTML = data.id[i];
+                  cell2.innerHTML = data.name[i];
+                  cell3.innerHTML = data.age[i];
+                }
+              } else {
+                // 没有找到学生时的处理
+                var row = table.insertRow(0);
+                var cell = row.insertCell(0);
+                cell.setAttribute('colspan', '3');
+                cell.innerHTML = 'No students found.';
+              }
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+              // 显示错误信息
+              var table = document.getElementById('studentsTable').getElementsByTagName('tbody')[0];
+              table.innerHTML = '<tr><td colspan="3">Error loading student data: ' + error.message + '</td></tr>';
+            });
+  }
+</script>
+</body>
+</html>
